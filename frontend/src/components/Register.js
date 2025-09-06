@@ -81,7 +81,7 @@ const Register = () => {
             className="form-input register-input"
             type={showPassword ? "text" : "password"}
             name="password"
-            placeholder="Enter password"
+            placeholder="Enter your password"
             required
             autoComplete="new-password"
             onChange={handleChange}

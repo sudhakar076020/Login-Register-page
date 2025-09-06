@@ -13,7 +13,6 @@ import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 const Login = () => {
   const [loader, setLoader] = useState(false); //Loader
   const [showPassword, setShowPassword] = useState(false); //Show the Password
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); //Show Confirm password
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -34,7 +33,7 @@ const Login = () => {
     event.preventDefault();
     setLoader(false);
     console.log(loginData);
-    toast.success("Account created successfully!");
+    toast.success("Login successfully!");
   };
 
   return (
@@ -68,7 +67,7 @@ const Login = () => {
             className="form-input login-input"
             type={showPassword ? "text" : "password"}
             name="password"
-            placeholder="Enter password"
+            placeholder="Enter your password"
             required
             onChange={handleChange}
             value={loginData.password}
