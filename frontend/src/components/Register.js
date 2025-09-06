@@ -1,4 +1,4 @@
-import "./Register.css";
+import "./LoginRegister.css";
 import { useState } from "react";
 
 // Alert Notification
@@ -40,9 +40,9 @@ const Register = () => {
   };
 
   return (
-    <div className="register-section">
+    <div className="container register-section">
       <header className="header-section">
-        <div className="logo-card">
+        <div className="logo-card register-logo-card">
           <LuUserRoundCheck className="header-icon" />
         </div>
         <h1>Create Account</h1>
@@ -50,7 +50,7 @@ const Register = () => {
       </header>
 
       {/* Form */}
-      <form className="register-form" onSubmit={registerNewForm}>
+      <form className="form-container" onSubmit={registerNewForm}>
         <div className="form-group">
           <label>Username*</label>
           <input
@@ -59,6 +59,7 @@ const Register = () => {
             placeholder="Username"
             value={registerData.username}
             onChange={handleChange}
+            className="register-input"
           />
         </div>
         <div className="form-group">
@@ -70,13 +71,14 @@ const Register = () => {
             required
             onChange={handleChange}
             value={registerData.email}
+            className="register-input"
           />
         </div>
 
         <div className="form-group password-field">
           <label>Password*</label>
           <input
-            className="form-input"
+            className="form-input register-input"
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Enter password"
@@ -102,6 +104,7 @@ const Register = () => {
             required
             onChange={handleChange}
             value={registerData.confirmPassword}
+            className="register-input"
           />
           <span
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -115,20 +118,28 @@ const Register = () => {
           <input
             type="checkbox"
             name="agreeTermsAndServices"
-            className="terms-checkbox"
             checked={registerData.agreeTermsAndServices}
             onChange={handleChange}
+            className="check-box"
+            id="agreeTerms"
           />
-          <p className="terms-text">
+          <label htmlFor="agreeTerms" className="checkbox-label">
             I agree to the{" "}
             <span className="terms-spl-text">Terms of Service </span>
             and <span className="terms-spl-text">Privacy Policy</span>
-          </p>
+          </label>
         </div>
 
-        <button type="submit" className="submit-btn">
+        <button type="submit" className="submit-btn register-btn">
           {loader ? <ClipLoader color="#0e0c0a" size={20} /> : "Create Account"}
         </button>
+        <p className="bottom-text">
+          Already have an account?
+          <a href="/login" className="register-bottom-spl-text">
+            {" "}
+            Sign in now
+          </a>
+        </p>
       </form>
     </div>
   );

@@ -1,0 +1,277 @@
+/* Login and Register Components Container */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  padding: 25px;
+  min-height: 100vh;
+}
+
+/* Both componets background color */
+.register-section {
+  background: linear-gradient(to bottom right, #f0fdf4, #d1fae5);
+}
+
+.login-section {
+  background: linear-gradient(135deg, #e8effe 0%, #c7dbff 90%);
+}
+
+/* Top Header Section */
+.header-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Top Logo */
+.logo-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 20px;
+  border-radius: 50%;
+}
+
+.register-logo-card {
+  background-color: #16a34a;
+}
+
+.login-logo-card {
+  background-color: #2563ea;
+}
+
+/* Logo Icon */
+.header-icon {
+  font-size: 25px;
+  color: #fff;
+}
+
+/* Header Heading */
+.header-section h1 {
+  color: #000;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Header Subheading */
+.header-section p {
+  color: #777;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+/* Form Container Section */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 460px;
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Input and label container */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Label */
+.form-group label {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  color: #413b33;
+  font-weight: 500;
+}
+
+/* Both components Input */
+.form-group input {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  padding: 15px 12px;
+  font-size: 1.1rem;
+  color: #0e0c0a;
+  border-radius: 6px;
+  outline: none;
+}
+
+/* Input Placeholders */
+.form-group input::placeholder {
+  color: #999;
+}
+
+.register-input:focus {
+  border-color: #15803d;
+}
+
+.login-input:focus {
+  border-color: #2563ea;
+}
+
+/* Password Eye Icon placing  */
+.password-field {
+  position: relative;
+}
+
+/* Eye icon */
+.toggle-password-icon {
+  position: absolute;
+  right: 18px;
+  top: 45px;
+  color: #999;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+/* Terms and services text  Register Component*/
+.terms-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Check boxs  */
+#agreeTerms[type="checkbox"] {
+  accent-color: #16a34a; /* green when checked */
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+#rememberMe[type="checkbox"] {
+  accent-color: #2563ea; /* Blue when checked */
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+/* Login component Remember Me and forgot password container */
+.rememberMe-forgetPassword-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.rememberMe-group {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Both Login and Register page checkbox label */
+.checkbox-label {
+  font-size: 1.02rem;
+  color: #000;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+/* Login component Forgot password */
+.forgot-password {
+  font-size: 1.02rem;
+  color: #2563ea;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.forgot-password:hover {
+  color: #1e4fc0;
+}
+
+/* Register component Checkbox Terms and Privacy spl Text */
+.terms-spl-text {
+  color: #16a34a;
+}
+
+/* Form Submit Button */
+.submit-btn {
+  color: #f0fdf4;
+  border: none;
+  padding: 15px 12px;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.register-btn {
+  background: #16a34a;
+}
+
+.register-btn:hover {
+  background: #15803d;
+}
+
+.login-btn {
+  background: #2563ea;
+}
+
+.login-btn:hover {
+  background: #1e4fc0;
+}
+
+/* Bottom Submit button text */
+.bottom-text {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #000;
+  text-align: center;
+}
+
+.login-bottom-spl-text {
+  color: #2563ea;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.login-bottom-spl-text:hover {
+  color: #1e4fc0;
+}
+
+.register-bottom-spl-text {
+  color: #16a34a;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.register-bottom-spl-text:hover {
+  color: #15803d;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 653px) {
+  .form-container {
+    width: 90%;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+  }
+
+  .form-group input {
+    padding: 15px 12px;
+    font-size: 1rem;
+  }
+  .toggle-password-icon {
+    position: absolute;
+    right: 18px;
+    top: 36px;
+  }
+}

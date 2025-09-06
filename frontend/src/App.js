@@ -4,12 +4,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Register from "./components/Register";
+import Login from "./components/Login";
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <ToastContainer
         position="top-right"
