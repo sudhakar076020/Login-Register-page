@@ -1,182 +1,191 @@
 import "./dashboard.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { v4 as uuidv4 } from "uuid";
 
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { AiOutlineSetting } from "react-icons/ai";
-import { FiUser, FiUserCheck, FiUserMinus, FiTrendingUp } from "react-icons/fi";
-import { TbUsers } from "react-icons/tb";
+import { FiUser } from "react-icons/fi";
 import { IoLogOutOutline } from "react-icons/io5";
 
-import { MdEmail, MdLocationOn, MdCalendarToday } from "react-icons/md";
-
-const usersDataCardList = [
+// Sample recent activities
+const recentActivities = [
   {
-    id: "TotalUsers",
-    title: "Total Users",
-    number: "5",
-    icon: <TbUsers className="card-icon total-users-icon" />,
+    id: uuidv4(),
+    activity: "Michael Smith started a new project on the backend.",
+    date: "2 hours ago",
   },
   {
-    id: "ActiveUsers",
-    title: "Active Users",
-    number: "3",
-    icon: <FiUserCheck className="card-icon active-users-icon" />,
+    id: uuidv4(),
+    activity: "Emily Davis updated the design for the landing page.",
+    date: "5 hours ago",
   },
   {
-    id: "InactiveUsers",
-    title: "Inactive Users",
-    number: "2",
-    icon: <FiUserMinus className="card-icon inactive-users-icon" />,
+    id: uuidv4(),
+    activity: "Sarah Johnson reviewed the latest API changes.",
+    date: "1 day ago",
   },
   {
-    id: "GrowthRate",
-    title: "Growth Rate",
-    number: "+12%",
-    icon: <FiTrendingUp className="card-icon growth-rate-icon" />,
+    id: uuidv4(),
+    activity: "Daniel Roberts fixed a critical bug in the login module.",
+    date: "2 days ago",
+  },
+  {
+    id: uuidv4(),
+    activity: "Sophia Lee created a new project roadmap.",
+    date: "3 days ago",
   },
 ];
 
-const users = [
+// Sample project statistics
+const projectStats = [
   {
-    id: uuidv4(),
-    name: "Sarah Johnson",
-    role: "Product Manager",
-    email: "sarah.johnson@example.com",
-    location: "San Francisco, CA",
-    joined: "Jan 2023",
-    status: "Active",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    id: 1,
+    title: "Projects",
+    number: Math.floor(Math.random() * 100),
+    icon: <IoMdNotificationsOutline />,
   },
   {
-    id: uuidv4(),
-    name: "Michael Smith",
-    role: "Software Engineer",
-    email: "michael.smith@example.com",
-    location: "New York, USA",
-    joined: "Mar 2022",
-    status: "Inactive",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    id: 2,
+    title: "Tasks",
+    number: Math.floor(Math.random() * 100),
+    icon: <AiOutlineSetting />,
   },
   {
-    id: uuidv4(),
-    name: "Emily Davis",
-    role: "UX Designer",
-    email: "emily.davis@example.com",
-    location: "Austin, TX",
-    joined: "Nov 2021",
-    status: "Active",
-    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-  },
-
-  {
-    id: uuidv4(),
-    name: "Daniel Roberts",
-    role: "Frontend Developer",
-    email: "daniel.roberts@example.com",
-    location: "Seattle, WA",
-    joined: "Jul 2022",
-    status: "Inactive",
-    avatar: "https://randomuser.me/api/portraits/men/45.jpg",
+    id: 3,
+    title: "Completed",
+    number: Math.floor(Math.random() * 100),
+    icon: <FiUser />,
   },
   {
-    id: uuidv4(),
-    name: "Sophia Lee",
-    role: "Project Coordinator",
-    email: "sophia.lee@example.com",
-    location: "Chicago, IL",
-    joined: "Feb 2023",
-    status: "Active",
-    avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    id: 4,
+    title: "Pending",
+    number: Math.floor(Math.random() * 100) - 15,
+    icon: <IoLogOutOutline />,
   },
 ];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState({}); // empty object to avoid charAt error
+
+  // Logout handler
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/logout", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      if (response.ok) navigate("/login");
+      else console.error("Logout failed");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  // Fetch dashboard data
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/dashboard", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json(); // parse JSON
+          setUser(data.message || {}); // safely set user
+        } else {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard:", error);
+        navigate("/login");
+      }
+    };
+    fetchDashboard();
+  }, [navigate]);
+
   return (
     <div className="dashboard-container">
+      {/* Navbar */}
       <nav className="navbar-container">
         <h2 className="nav-logo">Dashboard</h2>
-
         <div className="navbar-right">
-          <IoMdNotificationsOutline className="nav-right-icon" />
-          <AiOutlineSetting className="nav-right-icon" />
           <div className="nav-profile-card">
-            <FiUser className="nav-right-profile-icon" />
-            <button type="button" className="logout-btn-lg">
+            <button
+              type="button"
+              className="logout-btn-lg"
+              onClick={handleLogout}
+            >
               Logout
             </button>
-            <button type="button" className="logout-btn-sm">
+            <button
+              type="button"
+              className="logout-btn-sm"
+              onClick={handleLogout}
+            >
               <IoLogOutOutline className="logout-icon" />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Dashboard Content */}
-      <div className="dashboard-content">
-        <header className="content-header">
-          <h2>User Dashboard</h2>
-          <p>Manage and view user information</p>
-        </header>
-        {/* Users Datas */}
-        <div className="cards-container ">
-          <ul className="users-data-card">
-            {usersDataCardList.map((item) => (
-              <li key={item.id}>
-                {item.icon}
-                <div className="card-datas">
-                  <h3>{item.title}</h3>
-                  <p>{item.number}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+      <div className="status-profile-grid">
+        {/* Profile Card */}
+        <div className="profile-card">
+          <h3>My Profile</h3>
+          <div className="profile-info">
+            <div className="profile-avatar">
+              {user?.username ? user.username.slice(0, 1).toUpperCase() : "U"}
+            </div>
+            <div>
+              <p className="username">{user?.username || "Username"}</p>
+              <p className="email">{user?.email || "email@example.com"}</p>
+            </div>
+          </div>
+          <div className="profile-details">
+            <div>
+              <p>Role</p>
+              <p>{user?.role || "User"}</p>
+            </div>
+            <div>
+              <p>Last Login</p>
+              <p>{user?.lastLogin || "N/A"}</p>
+            </div>
+          </div>
         </div>
-        {/* Team Members */}
-        <div className="team-members-section">
-          <div className="team-member-header">
-            <h2>Team Members</h2>
-            <button type="button" className="add-user-btn">
-              Add User
-            </button>
-          </div>
-          {/* Users List  */}
-          <div className="profile-list">
-            {users.map((user) => (
-              <div key={user.id} className="profile-card">
-                <div className="profile-header">
-                  <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="profile-avatar"
-                  />
-                  <div className="profile-info">
-                    <h2>{user.name}</h2>
-                    <p className="role">{user.role}</p>
-                  </div>
-                  <span className={`status-badge ${user.status.toLowerCase()}`}>
-                    {user.status}
-                  </span>
-                </div>
 
-                <div className="profile-details">
-                  <p>
-                    <MdEmail className="icon" /> {user.email}
-                  </p>
-                  <p>
-                    <MdLocationOn className="icon" /> {user.location}
-                  </p>
-                  <p>
-                    <MdCalendarToday className="icon" /> Joined {user.joined}
-                  </p>
-                </div>
+        {/* Project Stats */}
+        <div className="project-status">
+          {projectStats.map((item) => (
+            <div key={item.id} className="stat-card">
+              <div>
+                <h4>{item.title}</h4>
+                <p>{item.number}</p>
               </div>
-            ))}
-          </div>
+              <div className="stat-icon">{item.icon}</div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Footer Section */}
+      {/* Recent Activity */}
+      <div className="recent-activity">
+        <h3>Recent Activity</h3>
+        <ul>
+          {recentActivities.map((act) => (
+            <li key={act.id}>
+              <p>{act.activity}</p>
+              <span>{act.date}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Footer */}
       <footer className="footer-section">
         <h4>
           Made with by <span>Sudhakar</span>

@@ -1,39 +1,55 @@
 import "./LoginRegister.css";
 import { useState } from "react";
-
-// Alert Notification
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { ClipLoader } from "react-spinners"; // Loader
-
+import { ClipLoader } from "react-spinners";
 import { FiLogIn } from "react-icons/fi";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
-const Login = () => {
-  const [loader, setLoader] = useState(false); //Loader
-  const [showPassword, setShowPassword] = useState(false); //Show the Password
+import { useNavigate } from "react-router-dom";
 
+const Login = () => {
+  const navigate = useNavigate();
+  const [loader, setLoader] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
-    rememberMe: false,
   });
 
   const handleChange = (event) => {
-    const { name, type, value, checked } = event.target;
+    const { name, value } = event.target;
     setLoginData({
       ...loginData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     });
   };
 
-  const handleLogin = (event) => {
-    setLoader(true);
+  const handleLogin = async (event) => {
     event.preventDefault();
-    setLoader(false);
-    console.log(loginData);
-    toast.success("Login successfully!");
+
+    try {
+      setLoader(true);
+      const { email, password } = loginData;
+      const apiUrl = "http://localhost:3000/login";
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include", // send session cookies
+      };
+      const response = await fetch(apiUrl, options);
+
+      const data = await response.text();
+      if (!response.ok) throw new Error(data);
+
+      toast.success(response.data);
+      setLoader(false);
+      navigate("/dashboard");
+    } catch (error) {
+      setLoader(false);
+      toast.error(error.response?.data || "Login failed");
+    }
   };
 
   return (
@@ -46,7 +62,6 @@ const Login = () => {
         <p>Please sign in to your account</p>
       </header>
 
-      {/* Form */}
       <form className="form-container" onSubmit={handleLogin}>
         <div className="form-group">
           <label>Email Address*</label>
@@ -80,30 +95,13 @@ const Login = () => {
           </span>
         </div>
 
-        <div className="rememberMe-forgetPassword-group">
-          <div className="rememberMe-group">
-            <input
-              type="checkbox"
-              name="rememberMe"
-              className="check-box"
-              checked={loginData.rememberMe}
-              onChange={handleChange}
-              id="rememberMe"
-            />
-            <label htmlFor="rememberMe" className="checkbox-label">
-              Remember me
-            </label>
-          </div>
-          <p className="forgot-password">Forgot Password?</p>
-        </div>
-
         <button type="submit" className="submit-btn login-btn">
           {loader ? <ClipLoader color="#0e0c0a" size={20} /> : "Sign In"}
         </button>
+
         <p className="bottom-text">
           Don't have an account?
           <a href="/register" className="login-bottom-spl-text">
-            {" "}
             Sign up now
           </a>
         </p>

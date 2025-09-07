@@ -1,19 +1,18 @@
 import "./LoginRegister.css";
 import { useState } from "react";
-
-// Alert Notification
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { ClipLoader } from "react-spinners"; // Loader
-
-import { LuUserRoundCheck, LuUserRound } from "react-icons/lu";
+import { ClipLoader } from "react-spinners";
+import { LuUserRoundCheck } from "react-icons/lu";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
+import { useNavigate } from "react-router-dom";
+
 const Register = () => {
-  const [loader, setLoader] = useState(false); //Loader
-  const [showPassword, setShowPassword] = useState(false); //Show the Password
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); //Show Confirm password
+  const navigate = useNavigate();
+  const [loader, setLoader] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [registerData, setRegisterData] = useState({
     username: "",
@@ -31,12 +30,38 @@ const Register = () => {
     });
   };
 
-  const registerNewForm = (event) => {
-    setLoader(true);
+  const registerNewForm = async (event) => {
     event.preventDefault();
-    setLoader(false);
-    console.log(registerData);
-    toast.success("Account created successfully!");
+
+    if (registerData.password !== registerData.confirmPassword) {
+      return toast.error("Passwords do not match!");
+    }
+    if (!registerData.agreeTermsAndServices) {
+      return toast.error("Please agree to the terms!");
+    }
+
+    try {
+      setLoader(true);
+      const { username, email, password } = registerData;
+      const apiUrl = "http://localhost:3000/register";
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+        credentials: "include", // send session cookies
+      };
+      const response = await fetch(apiUrl, options);
+
+      const data = await response.text();
+      if (!response.ok) throw new Error(data);
+
+      toast.success(response.data);
+      setLoader(false);
+      navigate("/login");
+    } catch (error) {
+      setLoader(false);
+      toast.error(error.response?.data || "Registration failed");
+    }
   };
 
   return (
@@ -49,7 +74,6 @@ const Register = () => {
         <p>Fill in the details to start your journey</p>
       </header>
 
-      {/* Form */}
       <form className="form-container" onSubmit={registerNewForm}>
         <div className="form-group">
           <label>Username*</label>
@@ -62,6 +86,7 @@ const Register = () => {
             className="register-input"
           />
         </div>
+
         <div className="form-group">
           <label>Email Address*</label>
           <input
@@ -125,18 +150,18 @@ const Register = () => {
           />
           <label htmlFor="agreeTerms" className="checkbox-label">
             I agree to the{" "}
-            <span className="terms-spl-text">Terms of Service </span>
-            and <span className="terms-spl-text">Privacy Policy</span>
+            <span className="terms-spl-text">Terms of Service</span> and{" "}
+            <span className="terms-spl-text">Privacy Policy</span>
           </label>
         </div>
 
         <button type="submit" className="submit-btn register-btn">
           {loader ? <ClipLoader color="#0e0c0a" size={20} /> : "Create Account"}
         </button>
+
         <p className="bottom-text">
           Already have an account?
           <a href="/login" className="register-bottom-spl-text">
-            {" "}
             Sign in now
           </a>
         </p>
