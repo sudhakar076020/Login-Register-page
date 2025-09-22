@@ -1,5 +1,5 @@
 import "./LoginRegister.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ClipLoader } from "react-spinners";
@@ -51,6 +51,11 @@ const Login = () => {
       toast.error(error.response?.data || "Login failed");
     }
   };
+
+  // Change browser tab title
+  useEffect(() => {
+    document.title = "Login page"; // Set the desired title here
+  }, []);
 
   return (
     <div className="container login-section">
