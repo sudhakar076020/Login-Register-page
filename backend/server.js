@@ -1,71 +1,11 @@
 const express = require("express");
-const { open } = require("sqlite");
-const sqlite3 = require("sqlite3");
-const path = require("path");
-const cors = require("cors");
-const session = require("express-session");
 const bcrypt = require("bcrypt");
+const { db } = require("../db");
 
-const dbPath = path.join(__dirname, "users.db");
-const app = express();
+const router = express.Router();
 
-app.use(express.json());
-
-//CORS setup
-app.use(
-  cors({
-    origin: "http://localhost:3001",
-    methods: ["GET", "POST", "PUT"],
-    credentials: true,
-  })
-);
-
-// Session
-app.use(
-  session({
-    secret: "your_secret_key",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false },
-  })
-);
-
-let db = null;
-
-const initializeDBandServer = async () => {
-  try {
-    db = await open({
-      filename: dbPath,
-      driver: sqlite3.Database,
-    });
-
-    // create table
-    await db.run(`
-      CREATE TABLE IF NOT EXISTS user (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE,
-        email TEXT UNIQUE,
-        password TEXT
-      );
-    `);
-
-    console.log("User table ready");
-
-    app.listen(3000, () => {
-      console.log("Server running on http://localhost:3000");
-    });
-  } catch (error) {
-    console.log(`DB error: ${error}`);
-    process.exit(1);
-  }
-};
-
-initializeDBandServer();
-
-// =============================
 // Register
-// =============================
-app.post("/register", async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
@@ -78,7 +18,6 @@ app.post("/register", async (req, res) => {
     }
 
     const dbUser = await db.get("SELECT * FROM user WHERE email = ?", [email]);
-
     if (dbUser) {
       return res.status(400).json({ error: "User already exists" });
     }
@@ -96,21 +35,17 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// =============================
 // Login
-// =============================
-app.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const dbUser = await db.get("SELECT * FROM user WHERE email = ?", [email]);
-
     if (!dbUser) {
       return res.status(400).json({ error: "Invalid user" });
     }
 
     const isValid = await bcrypt.compare(password, dbUser.password);
-
     if (!isValid) {
       return res.status(400).json({ error: "Invalid password" });
     }
@@ -125,10 +60,8 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// =============================
 // Protected Dashboard route
-// =============================
-app.get("/dashboard", async (req, res) => {
+router.get("/dashboard", async (req, res) => {
   if (!req.session.userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -138,12 +71,10 @@ app.get("/dashboard", async (req, res) => {
   res.json({ message: user });
 });
 
-// =============================
-// Logout route
-// =============================
-app.post("/logout", (req, res) => {
+// Logout
+router.post("/logout", (req, res) => {
   req.session.destroy();
   res.send("Logged out successfully!");
 });
 
-module.exports = app;
+module.exports = router;

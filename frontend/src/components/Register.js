@@ -57,7 +57,7 @@ const Register = () => {
 
       toast.success(response.data);
       setLoader(false);
-      navigate("/login");
+      navigate("/"); // "/" goes to login page
     } catch (error) {
       setLoader(false);
       toast.error(error.response?.data || "Registration failed");
@@ -160,8 +160,8 @@ const Register = () => {
         </button>
 
         <p className="bottom-text">
-          Already have an account?
-          <a href="/login" className="register-bottom-spl-text">
+          Already have an account?{" "}
+          <a href="/" className="register-bottom-spl-text">
             Sign in now
           </a>
         </p>

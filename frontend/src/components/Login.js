@@ -100,7 +100,7 @@ const Login = () => {
         </button>
 
         <p className="bottom-text">
-          Don't have an account?
+          Don't have an account?{" "}
           <a href="/register" className="login-bottom-spl-text">
             Sign up now
           </a>
